@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Tasty Foods</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     LOGIN SCREEN
+     Shown when not authenticated. Hidden after successful login.
+═════════════════════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🍖</div>
+    <h1>Admin Access</h1>
+    <p>Tasty Foods Management Console</p>
+
+    <input type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password">
+    <div id="login-error" class="login-error"></div>
+    <button class="login-btn" onclick="adminLogin()">SIGN IN →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     DASHBOARD
+     Hidden until authenticated.
+═════════════════════════════════════════════════════════════ -->
+<div id="dashboard" style="display:none">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand-name"><span>🍖</span> TASTY FOODS</div>
+    </div>
+
+    <p class="sidebar-label">Management</p>
+    <ul class="sidebar-nav">
+      <li>
+        <a onclick="showPanel('overview')" class="active" id="nav-overview">
+          <span class="nav-icon">📊</span> Overview
+        </a>
+      </li>
+      <li>
+        <a onclick="showPanel('menu')" id="nav-menu">
+          <span class="nav-icon">🍽️</span> Menu Items
+        </a>
+      </li>
+      <li>
+        <a onclick="showPanel('home')" id="nav-home">
+          <span class="nav-icon">🏠</span> Home Slots
+        </a>
+      </li>
+      <li>
+        <a onclick="showPanel('translations')" id="nav-translations">
+          <span class="nav-icon">🌐</span> Translations
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a href="index.html" target="_blank" class="logout-btn" style="text-decoration:none">
+        <span>👁</span> View Site
+      </a>
+      <button class="logout-btn" onclick="adminLogout()">
+        <span>🚪</span> Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- ── TOPBAR ─────────────────────────────────────────────────────────── -->
+    <div class="topbar">
+      <h2 id="panel-title">Overview</h2>
+    </div>
+
+    <!-- ── OVERVIEW PANEL ─────────────────────────────────────────────────── -->
+    <div id="panel-overview" class="panel active">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Menu Items</div>
+          <div class="stat-value" id="stat-menu">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Available</div>
+          <div class="stat-value" id="stat-available">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Best Sellers</div>
+          <div class="stat-value" id="stat-bestseller">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Home Slots Filled</div>
+          <div class="stat-value" id="stat-slots">—</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Quick Actions</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-brand" onclick="showPanel('menu')">+ Add Menu Item</button>
+          <button class="btn btn-ghost" onclick="showPanel('home')">Edit Home Slots</button>
+          <button class="btn btn-ghost" onclick="showPanel('translations')">Edit Translations</button>
+          <a href="index.html" target="_blank" class="btn btn-ghost" style="text-decoration:none">View Site ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MENU PANEL ──────────────────────────────────────────────────────── -->
+    <div id="panel-menu" class="panel">
+      <div class="two-col">
+
+        <!-- LEFT: Add/Edit Form -->
+        <div class="sticky-top">
+          <div class="card">
+            <div class="card-title">
+              <span id="menu-form-title">Add New Item</span>
+              <button class="btn btn-ghost" id="menu-cancel-btn" onclick="resetMenuForm()" style="display:none;padding:6px 12px;font-size:0.78rem">Cancel Edit</button>
+            </div>
+            <input type="hidden" id="menu-edit-id">
+
+            <label>Name (English) *</label>
+            <input type="text" id="menu-name-en" placeholder="e.g. Spicy Pork Stir Fry">
+
+            <label>Нэр (Монгол)</label>
+            <input type="text" id="menu-name-mn" placeholder="Монгол нэр">
+
+            <label>Price (₮) *</label>
+            <input type="number" id="menu-price" placeholder="e.g. 15000">
+
+            <label>Filter Tags (comma-separated)</label>
+            <input type="text" id="menu-tags" placeholder="Spicy, Korean, Meat, Soup">
+
+            <label>Dish Image</label>
+            <div class="drop-zone" id="menu-drop" onclick="document.getElementById('menu-file').click()">
+              <div class="icon">📷</div>
+              <p>Click or drag & drop to upload</p>
+            </div>
+            <input type="file" id="menu-file" accept="image/*" style="display:none" onchange="handleMenuUpload(this.files[0])">
+            <input type="text" id="menu-image" placeholder="Or paste image path">
+
+            <div class="form-row">
+              <label class="checkbox-row">
+                <input type="checkbox" id="menu-available" checked>
+                <span>Available</span>
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" id="menu-bestseller">
+                <span>Best Seller ★</span>
+              </label>
+            </div>
+
+            <button class="btn btn-brand btn-full" onclick="saveMenuItem()">
+              <span id="menu-save-label">+ ADD TO MENU</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Menu Grid -->
+        <div>
+          <div class="card-title" style="margin-bottom:16px">
+            Live Menu Items
+            <span style="font-size:0.78rem;color:var(--muted);font-weight:400" id="menu-count"></span>
+          </div>
+          <div class="admin-grid" id="menu-grid">
+            <div style="padding:40px;text-align:center;color:var(--muted)">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HOME SLOTS PANEL ────────────────────────────────────────────────── -->
+    <div id="panel-home" class="panel">
+      <div class="two-col">
+
+        <!-- LEFT: Edit form -->
+        <div class="sticky-top">
+          <div class="card">
+            <div class="card-title">
+              Edit Slot <span id="slot-title" style="color:var(--brand)">— select a slot →</span>
+            </div>
+            <p style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">
+              Click any slot on the right to start editing it.
+            </p>
+            <input type="hidden" id="slot-num">
+
+            <label>Name (English)</label>
+            <input type="text" id="slot-name-en" placeholder="Dish name" disabled>
+
+            <label>Нэр (Монгол)</label>
+            <input type="text" id="slot-name-mn" placeholder="Монгол нэр" disabled>
+
+            <label>Price (₮)</label>
+            <input type="number" id="slot-price" placeholder="Price" disabled>
+
+            <label>Image</label>
+            <div class="drop-zone" id="slot-drop" onclick="document.getElementById('slot-file').click()">
+              <div class="icon">📷</div>
+              <p>Click or drag & drop</p>
+            </div>
+            <input type="file" id="slot-file" accept="image/*" style="display:none" onchange="handleSlotUpload(this.files[0])">
+            <input type="text" id="slot-image" placeholder="Or paste image path" disabled>
+
+            <button class="btn btn-brand btn-full" id="slot-save-btn" onclick="saveSlot()" disabled>
+              SAVE SLOT
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: 6 Slots grid -->
+        <div>
+          <div class="card-title" style="margin-bottom:16px">Home Page Slots (6)</div>
+          <div class="slots-grid" id="slots-grid">
+            <div style="color:var(--muted)">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TRANSLATIONS PANEL ──────────────────────────────────────────────── -->
+    <div id="panel-translations" class="panel">
+      <div class="card">
+        <div class="card-title">
+          Translations (EN / MN)
+          <button class="btn btn-success" onclick="saveAllTranslations()">Save All Changes</button>
+        </div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:24px">
+          Edit any text below. Changes apply to both the English and Mongolian versions of your site.
+          Click "Save All Changes" when done.
+        </p>
+        <div style="overflow-x:auto">
+          <table class="trans-table">
+            <thead>
+              <tr>
+                <th style="width:180px">Key</th>
+                <th>English</th>
+                <th>Монгол</th>
+              </tr>
+            </thead>
+            <tbody id="trans-body">
+              <tr><td colspan="3" style="text-align:center;padding:40px;color:var(--muted)">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ─── Toast ────────────────────────────────────────────────────────────── -->
+<div id="admin-toast" class="admin-toast"></div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

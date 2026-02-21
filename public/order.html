@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Order | Tasty Foods</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .order-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .order-left h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .order-left p { color: var(--mid); margin-bottom: 28px; }
+
+    .order-list { display: grid; gap: 14px; }
+
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--light);
+      border-radius: var(--radius);
+    }
+
+    .order-item img {
+      width: 72px; height: 72px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .order-item-info { flex: 1; }
+    .order-item-info h4 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+    .order-item-info p { color: var(--brand); font-weight: 700; font-size: 1rem; }
+
+    .order-remove {
+      background: none;
+      border: none;
+      color: var(--mid);
+      font-size: 1rem;
+      cursor: pointer;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .order-remove:hover { background: #ffeeee; color: #e00; }
+
+    .order-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--mid);
+    }
+    .order-empty .empty-emoji { font-size: 3rem; margin-bottom: 16px; }
+    .order-empty a { color: var(--brand); font-weight: 600; }
+
+    /* Right: Checkout card */
+    .checkout-card {
+      background: var(--dark);
+      border-radius: 20px;
+      padding: 32px;
+      color: white;
+      position: sticky;
+      top: 88px;
+    }
+
+    .checkout-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--brand);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .price-row.total {
+      border-top: 1px dashed rgba(255,255,255,0.15);
+      margin-top: 8px;
+      padding-top: 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+    .price-row.total span:last-child { color: var(--brand); font-size: 1.3rem; }
+
+    .checkout-form { margin-top: 24px; }
+
+    .checkout-form label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 6px;
+    }
+
+    .checkout-form input,
+    .checkout-form textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: white;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      margin-bottom: 14px;
+      transition: var(--transition);
+    }
+    .checkout-form input:focus,
+    .checkout-form textarea:focus { border-color: var(--brand); }
+    .checkout-form input::placeholder,
+    .checkout-form textarea::placeholder { color: rgba(255,255,255,0.3); }
+    .checkout-form textarea { resize: vertical; min-height: 80px; }
+
+    .place-order-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--brand);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 4px;
+    }
+    .place-order-btn:hover { background: var(--brand-dark); transform: translateY(-1px); }
+    .place-order-btn:disabled { background: var(--mid); cursor: not-allowed; transform: none; }
+
+    @media (max-width: 800px) {
+      .order-page { grid-template-columns: 1fr; }
+      .checkout-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-content">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="Tasty Foods">
+      <span class="brand-name" data-key="brand_name">TASTY FOODS</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html" data-key="nav_home">Home</a></li>
+      <li><a href="menu.html" data-key="nav_menu">Menu</a></li>
+      <li><a href="about.html" data-key="nav_about">About Us</a></li>
+      <li><a href="contact.html" data-key="nav_contact">Contact</a></li>
+      <li class="order-link"><a href="order.html" data-key="nav_order" class="active">Order</a></li>
+    </ul>
+    <div class="lang-switch">
+      <img src="https://flagcdn.com/w20/mn.png" id="lang-flag" alt="flag">
+      <div class="switch-track" id="lang-track" onclick="Lang.toggle()"><div class="switch-handle"></div></div>
+      <span id="lang-label">MN</span>
+    </div>
+  </div>
+</nav>
+
+<main class="order-page">
+  <!-- LEFT: Items -->
+  <div class="order-left">
+    <h2>Your Selection 🥟</h2>
+    <p>Review your order before sending to the kitchen.</p>
+    <div class="order-list" id="order-list"></div>
+  </div>
+
+  <!-- RIGHT: Checkout -->
+  <div class="checkout-card">
+    <h3>Finalize Order</h3>
+    <div class="price-row"><span>Subtotal</span><span id="subtotal">0₮</span></div>
+    <div class="price-row"><span>Delivery</span><span id="delivery">5,000₮</span></div>
+    <div class="price-row total"><span>Grand Total</span><span id="grand-total">0₮</span></div>
+
+    <div class="checkout-form">
+      <label>Special Requests</label>
+      <textarea id="notes" placeholder="No spicy, extra sauce..."></textarea>
+
+      <label>Delivery Address</label>
+      <input type="text" id="address" placeholder="Ulaanbaatar, district...">
+
+      <button class="place-order-btn" id="order-btn" onclick="sendOrder()">
+        Send to Kitchen 🚀
+      </button>
+    </div>
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/lang.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/order.js"></script>
+</body>
+</html>

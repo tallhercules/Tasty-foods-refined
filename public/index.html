@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tasty Foods - The freshest ready-to-go food in Mongolia. Order online for takeout and delivery.">
+  <title>Tasty Foods — Fresh Food Mongolia</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- ─── NAVBAR ─────────────────────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="nav-content">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="Tasty Foods Logo">
+      <span class="brand-name" data-key="brand_name">TASTY FOODS</span>
+    </a>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html" data-key="nav_home" class="active">Home</a></li>
+      <li><a href="menu.html" data-key="nav_menu">Menu</a></li>
+      <li><a href="about.html" data-key="nav_about">About Us</a></li>
+      <li><a href="contact.html" data-key="nav_contact">Contact</a></li>
+      <li class="order-link">
+        <a href="order.html" data-key="nav_order">
+          Order
+          <span class="nav-badge" id="nav-cart-badge" style="display:none">0</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="lang-switch">
+      <img src="https://flagcdn.com/w20/mn.png" id="lang-flag" alt="Language flag">
+      <div class="switch-track" id="lang-track" onclick="Lang.toggle()">
+        <div class="switch-handle"></div>
+      </div>
+      <span id="lang-label">MN</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ───────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <img src="images/cooking-bulgogi.jpg" alt="Tasty Korean food cooking" class="hero-bg">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-badge" data-key="hero_tag">Takeout & Delivery</span>
+    <h1 class="hero-title" data-key="hero_title">Welcome to the Freshest Ready-To-Go Food in Mongolia!</h1>
+    <p class="hero-sub" data-key="hero_sub">Grab your next favorite meal today.</p>
+    <a href="menu.html" class="btn btn-primary" data-key="order_btn">Order Online</a>
+  </div>
+</section>
+
+<!-- ─── GALLERY ────────────────────────────────────────────────────────────── -->
+<section class="gallery-section">
+  <span class="section-tag" data-key="gallery_tag">Gallery</span>
+  <h2 class="section-title" data-key="gallery_title">FRESH EATS</h2>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" data-key="search_ph" placeholder="Search for chicken, pork, noodles..." oninput="filterGallery(this.value)">
+  </div>
+
+  <div class="food-grid" id="food-grid">
+    <div class="loading-state" style="grid-column:1/-1; text-align:center; padding:60px; color:#999;">Loading...</div>
+  </div>
+
+  <div class="see-more-wrap">
+    <a href="menu.html" class="btn btn-dark" data-key="see_more">See Full Menu →</a>
+  </div>
+</section>
+
+<!-- ─── FEATURES ───────────────────────────────────────────────────────────── -->
+<section class="features-section">
+  <div class="features-inner">
+    <span class="section-tag" style="color:rgba(255,107,69,0.8)" data-key="process_tag">Quality First</span>
+    <h2 class="section-title" style="color:white" data-key="process_title">MADE FRESH EVERY DAY</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feat-icon">🌿</div>
+        <h3 data-key="feat1_title">Local Ingredients</h3>
+        <p data-key="feat1_desc">We source the finest ingredients from local Mongolian farms to ensure maximum freshness.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">🍱</div>
+        <h3 data-key="feat2_title">Ready To Go</h3>
+        <p data-key="feat2_desc">Perfectly packaged meals designed for your busy lifestyle without sacrificing taste.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">🚚</div>
+        <h3 data-key="feat3_title">Fast Delivery</h3>
+        <p data-key="feat3_desc">From our store to your door in under 30 minutes, guaranteed hot and fresh.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <p>© 2025 <span>Tasty Foods</span> — Ulaanbaatar, Mongolia</p>
+</footer>
+
+<!-- ─── CART SIDEBAR ───────────────────────────────────────────────────────── -->
+<aside id="cart-sidebar" class="cart-sidebar">
+  <div class="cart-header">
+    <h3 data-key="cart_title">Your Order</h3>
+    <button class="cart-close" onclick="Cart.close()">✕</button>
+  </div>
+  <div id="cart-items" class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span data-key="cart_total">Total:</span>
+      <span id="cart-total">0₮</span>
+    </div>
+    <a href="order.html" class="btn btn-primary btn-full" data-key="cart_checkout">Order Now 🚀</a>
+  </div>
+</aside>
+
+<div id="cart-overlay" class="cart-overlay"></div>
+
+<!-- ─── FLOATING CART ──────────────────────────────────────────────────────── -->
+<button class="float-cart" onclick="Cart.toggle()" aria-label="Open cart">
+  <span class="float-badge" id="cart-badge">0</span>
+  <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
+</button>
+
+<!-- ─── TOAST ──────────────────────────────────────────────────────────────── -->
+<div id="toast" class="toast"></div>
+
+<script src="js/lang.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
