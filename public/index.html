@@ -14,7 +14,7 @@
   <div class="nav-content">
     <a href="index.html" class="brand">
       <img src="images/logo.png" alt="Tasty Foods Logo">
-      <span class="brand-name" data-key="brand_name">TASTY FOODS</span>
+      <span class="brand-name">TASTY FOODS</span>
     </a>
 
     <ul class="nav-links" id="nav-links">
@@ -41,7 +41,8 @@
 </nav>
 
 <!-- ─── HERO ───────────────────────────────────────────────────────────────── -->
-<section class="hero">
+<section class="hero-hidden">
+ <section class="hero">
   <img src="images/cooking-bulgogi.jpg" alt="Tasty Korean food cooking" class="hero-bg">
   <div class="hero-overlay"></div>
   <div class="hero-content">
@@ -50,6 +51,7 @@
     <p class="hero-sub" data-key="hero_sub">Grab your next favorite meal today.</p>
     <a href="menu.html" class="btn btn-primary" data-key="order_btn">Order Online</a>
   </div>
+ </section>
 </section>
 
 <!-- ─── GALLERY ────────────────────────────────────────────────────────────── -->
@@ -125,6 +127,23 @@
   <span class="float-badge" id="cart-badge">0</span>
   <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
 </button>
+
+<!-- ─── DAILY PICK POPUP ──────────────────────────── -->
+<div id="daily-popup" class="daily-popup">
+  <div class="daily-popup-card">
+    <button class="daily-popup-close" onclick="closePopup()">✕</button>
+    <div class="daily-popup-badge">👨‍🍳 Chef's Pick Today</div>
+    <img id="popup-img" src="" alt="Daily Pick" class="daily-popup-img">
+    <div class="daily-popup-info">
+      <h3 id="popup-name"></h3>
+      <div class="daily-popup-price" id="popup-price"></div>
+      <button class="daily-popup-btn" id="popup-add-btn">
+        Add to Order +
+      </button>
+    </div>
+  </div>
+</div>
+<div id="daily-overlay" class="daily-overlay" onclick="closePopup()"></div>
 
 <!-- ─── TOAST ──────────────────────────────────────────────────────────────── -->
 <div id="toast" class="toast"></div>

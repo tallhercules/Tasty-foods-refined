@@ -17,6 +17,9 @@ const Cart = (() => {
   function save() {
     localStorage.setItem('tf_cart', JSON.stringify(items));
   }
+  // Always start at top on load
+history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
 
   // ─── Public API ──────────────────────────────────────────────────────────────
   function add(name, price, image) {
@@ -134,10 +137,8 @@ const Cart = (() => {
     load();
     render();
 
-    // Close sidebar on overlay click
     document.getElementById('cart-overlay')?.addEventListener('click', close);
 
-    // Delegated event for add-to-order buttons
     document.addEventListener('click', e => {
       const btn = e.target.closest('[data-add]');
       if (!btn) return;
@@ -151,5 +152,42 @@ const Cart = (() => {
 
 })();
 
-// Make globally accessible
 window.Cart = Cart;
+
+// ─── Page transition on link click ───────────────────────
+document.addEventListener('click', e => {
+  const link = e.target.closest('a[href]');
+  if (!link) return;
+
+  const href = link.getAttribute('href');
+
+  if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto')) return;
+
+  e.preventDefault();
+  document.body.classList.add('fade-out');
+
+  setTimeout(() => {
+    window.location.href = href;
+  }, 380);
+});
+
+// ─── Scroll animations ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const scrollEls = document.querySelectorAll(
+    '.gallery-section, .features-section, .feature-card, .filter-bar, .menu-grid-wrap'
+  );
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('scroll-visible');
+      } else {
+        entry.target.style.transitionDelay = '0s';
+        entry.target.classList.remove('scroll-visible');
+        setTimeout(() => entry.target.style.transitionDelay = '', 50);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+  scrollEls.forEach(el => observer.observe(el));
+});

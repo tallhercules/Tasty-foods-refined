@@ -74,3 +74,56 @@ function filterGallery(query) {
 document.addEventListener('langchange', () => renderGallery(allHomeItems));
 
 document.addEventListener('DOMContentLoaded', loadHomeGallery);
+
+// ─── Daily Pick Popup ─────────────────────────────────────
+
+async function loadDailyPopup() {
+  try {
+    const res = await fetch('/api/daily-pick');
+    const data = await res.json();
+
+    // Don't show if disabled or no item set
+    if (!data.enabled || !data.item) return;
+
+    // Check if user already saw it today
+    const lastSeen = localStorage.getItem('tf_popup_seen');
+    const today = new Date().toDateString();
+    if (lastSeen === today) return;
+
+    // Fill in the popup content
+    const lang = Lang?.getLang?.() || 'mn';
+    const name = lang === 'mn' && data.item.name_mn 
+      ? data.item.name_mn 
+      : data.item.name_en;
+
+    document.getElementById('popup-name').textContent = name;
+    document.getElementById('popup-price').textContent = 
+      Number(data.item.price).toLocaleString() + '₮';
+    document.getElementById('popup-img').src = data.item.image || '';
+
+    // Wire up the add button
+    const addBtn = document.getElementById('popup-add-btn');
+    addBtn.onclick = () => {
+      Cart.add(data.item.name_en, data.item.price, data.item.image);
+      closePopup();
+    };
+
+    // Show after a small delay so page loads first
+    setTimeout(() => {
+      document.getElementById('daily-popup').classList.add('active');
+      document.getElementById('daily-overlay').classList.add('active');
+    }, 1500);
+
+  } catch (err) {
+    console.warn('[Popup] Could not load daily pick:', err.message);
+  }
+}
+
+function closePopup() {
+  document.getElementById('daily-popup').classList.remove('active');
+  document.getElementById('daily-overlay').classList.remove('active');
+  // Save today's date so it won't show again until tomorrow
+  localStorage.setItem('tf_popup_seen', new Date().toDateString());
+}
+
+document.addEventListener('DOMContentLoaded', loadDailyPopup);

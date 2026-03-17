@@ -1,16 +1,17 @@
 /* ─── IMPORTS ──────────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&family=Raleway:wght@700;800;900&display=swap');
 
 /* ─── VARIABLES ────────────────────────────────────────────────────────────── */
 :root {
-  --brand:       #ff6b45;
-  --brand-dark:  #e05530;
-  --brand-light: #fff0ec;
-  --dark:        #1a1512;
+  --brand:       #E8943A;
+  --brand-dark:  #C97A2A;
+  --brand-light: #FDF4E7;
+  --dark:        #2C1A0E;
   --dark2:       #2b2319;
   --mid:         #5a4f47;
-  --light:       #f9f4f1;
-  --white:       #ffffff;
+  --light:       #FAF3E8;
+  --white:       #FFFDF8;
+  --gold:        #C9973A;
   --border:      #ede8e4;
   --radius:      14px;
   --shadow:      0 4px 24px rgba(26,21,18,0.08);
@@ -39,61 +40,121 @@ button { font-family: inherit; cursor: pointer; }
 ::-webkit-scrollbar-track { background: var(--light); }
 ::-webkit-scrollbar-thumb { background: var(--brand); border-radius: 99px; }
 
+/* ─── PAGE TRANSITIONS ─────────────────────────────────── */
+/* ─── PAGE & SCROLL ANIMATIONS ─────────────────────────── */
+
+/* Navbar always instant */
+.navbar {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+/* Hero fades in on load */
+.hero,
+.menu-hero,
+.order-page {
+  animation: riseUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+/* Scroll sections start hidden */
+.gallery-section,
+.features-section,
+.feature-card,
+.filter-bar,
+.menu-grid-wrap {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feature-card:nth-child(2) { transition-delay: 0.12s; }
+.feature-card:nth-child(3) { transition-delay: 0.24s; }
+
+.scroll-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Page fade out on navigate */
+body.fade-out .hero,
+body.fade-out .gallery-section,
+body.fade-out .features-section,
+body.fade-out .menu-hero,
+body.fade-out .filter-bar,
+body.fade-out .menu-grid-wrap {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
 /* ─── NAVBAR ───────────────────────────────────────────────────────────────── */
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 900;
-  background: #ffffff;
+  background: #fdf6ec;
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  height: 68px;
+  border-bottom: 3px solid var(--brand);
+  height: 60px;
 }
 
 .nav-content {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%; 
+  margin: 0;
   height: 100%;
-  padding: 0 24px;
+  padding: 0 40px;
   display: flex;
   align-items: center;
-  gap: 32px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
 }
 
 .brand img {
   position: absolute;
-    left: 0;
-    top: 100%;
-    transform: translateY(-40%);
-    height: 150px;
-    width: auto;
-    z-index: 2010;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,.2));
+  left: 0;
+  top: 100%;
+  transform: translateY(-40%);
+  height: 135px;
+  width: auto;
+  z-index: 2010;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.2));
+  margin-top: -17px;
 }
 
 .brand-name {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--dark);
-  letter-spacing: -0.3px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--brand);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-left: 170px;
 }
-
 .nav-links {
   display: flex;
   align-items: center;
   list-style: none;
-  gap: 4px;
-  margin-left: auto;
+  gap: 24px;
+  margin-left: auto; 
+  margin-right: 40px; 
 }
 
+.nav-links li {
+  white-space: nowrap; 
+  flex-shrink: 0;
+}
 .nav-links a {
   display: block;
   padding: 7px 14px;
@@ -106,15 +167,20 @@ button { font-family: inherit; cursor: pointer; }
 
 .nav-links a:hover,
 .nav-links a.active {
-  color: var(--brand);
-  background: var(--brand-light);
+  color: var(--gold);
+background: rgba(201, 151, 58, 0.1);
 }
 
 .nav-links .order-link a {
-  background: var(--brand);
+  background: var(--gold);
   color: white;
   padding: 7px 18px;
   border-radius: 99px;
+}
+
+.nav-links .order-link a:hover {
+  background: #a07820;
+  color: white;
 }
 
 .nav-links .order-link a:hover {
@@ -336,6 +402,133 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--mid);
   font-size: 1rem;
   pointer-events: none;
+}
+
+/* ─── DAILY PICK POPUP ──────────────────────────────────── */
+.daily-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 21, 18, 0.6);
+  z-index: 1100;
+  backdrop-filter: blur(3px);
+  animation: fadeInOverlay 0.4s ease forwards;
+}
+
+.daily-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -48%);
+  z-index: 1200;
+  width: 90%;
+  max-width: 420px;
+  animation: popupRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.daily-popup.active,
+.daily-overlay.active {
+  display: block;
+}
+
+.daily-popup-card {
+  background: var(--white);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(26, 21, 18, 0.25);
+  position: relative;
+}
+
+.daily-popup-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.daily-popup-close:hover {
+  background: var(--brand);
+  color: white;
+}
+
+.daily-popup-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: var(--gold);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+.daily-popup-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.daily-popup-info {
+  padding: 24px;
+  text-align: center;
+}
+
+.daily-popup-info h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.daily-popup-price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.daily-popup-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--brand);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.daily-popup-btn:hover {
+  background: var(--brand-dark);
+  transform: translateY(-2px);
+}
+
+@keyframes popupRise {
+  from { opacity: 0; transform: translate(-50%, -44%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ─── FOOD GRID ────────────────────────────────────────────────────────────── */
@@ -668,3 +861,4 @@ button { font-family: inherit; cursor: pointer; }
   .food-grid { grid-template-columns: repeat(2, 1fr); }
   .hero-title { font-size: 2rem; }
 }
+

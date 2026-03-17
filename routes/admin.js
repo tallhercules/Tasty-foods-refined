@@ -167,4 +167,44 @@ router.put('/translations', (req, res) => {
   res.json({ success: true });
 });
 
+// ─── Daily Pick Routes ────────────────────────────────────
+
+// GET /api/admin/daily-pick
+router.get('/daily-pick', (req, res) => {
+  try {
+    const row = db.prepare(`SELECT value FROM settings WHERE key = 'daily_pick'`).get();
+    const data = JSON.parse(row?.value || '{}');
+    
+    // If there's an item_id, fetch the full item details too
+    if (data.item_id) {
+      const item = db.prepare(`SELECT * FROM menu_items WHERE id = ?`).get(data.item_id);
+      data.item = item || null;
+    }
+    
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT /api/admin/daily-pick
+router.put('/daily-pick', (req, res) => {
+  try {
+    const { enabled, item_id } = req.body;
+    const value = JSON.stringify({ 
+      enabled: !!enabled, 
+      item_id: item_id || null 
+    });
+    
+    db.prepare(`
+      INSERT INTO settings (key, value) VALUES ('daily_pick', ?)
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value
+    `).run(value);
+    
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

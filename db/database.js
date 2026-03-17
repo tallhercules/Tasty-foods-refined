@@ -60,6 +60,7 @@ const transCount = db.prepare('SELECT COUNT(*) as c FROM translations').get().c;
 if (transCount === 0) {
   const defaults = [
     // key, en, mn
+    ['brand_name',     'TASTY FOODS',                  'TASTY FOODS'],
     ['nav_home',       'Home',                         'Гэр'],
     ['nav_menu',       'Menu',                         'Цэс'],
     ['nav_about',      'About Us',                     'Бидний тухай'],
@@ -98,5 +99,11 @@ if (transCount === 0) {
   });
   insertAll(defaults);
 }
-
+// ─── Seed default daily pick setting ─────────────────────
+const hasDailyPick = db.prepare(`SELECT value FROM settings WHERE key = 'daily_pick'`).get();
+if (!hasDailyPick) {
+  db.prepare(`INSERT INTO settings (key, value) VALUES ('daily_pick', ?)`).run(
+    JSON.stringify({ enabled: false, item_id: null })
+  );
+}
 module.exports = db;

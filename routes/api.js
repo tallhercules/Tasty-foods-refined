@@ -45,4 +45,25 @@ router.get('/translations', (req, res) => {
   }
 });
 
+// GET /api/daily-pick — public route for home page
+router.get('/daily-pick', (req, res) => {
+  try {
+    const row = db.prepare(`SELECT value FROM settings WHERE key = 'daily_pick'`).get();
+    const data = JSON.parse(row?.value || '{}');
+    
+    if (!data.enabled || !data.item_id) {
+      return res.json({ enabled: false });
+    }
+    
+    const item = db.prepare(`
+      SELECT id, name_en, name_mn, price, image, tags
+      FROM menu_items WHERE id = ? AND is_available = 1
+    `).get(data.item_id);
+    
+    res.json({ enabled: true, item: item || null });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

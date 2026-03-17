@@ -58,6 +58,11 @@
           <span class="nav-icon">🌐</span> Translations
         </a>
       </li>
+      <li>
+  <a onclick="showPanel('daily')" id="nav-daily">
+    <span class="nav-icon">⭐</span> Daily Pick
+  </a>
+</li>
     </ul>
 
     <div class="sidebar-footer">
@@ -251,7 +256,37 @@
 
   </main>
 </div>
+<!-- ── DAILY PICK PANEL ──────────────────────────────────── -->
+<div id="panel-daily" class="panel">
+  <div class="card" style="max-width:500px">
+    <div class="card-title">Daily Recommendation Popup</div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:24px">
+      Choose a menu item to feature as today's recommendation.
+      Customers will see a popup once per day on the home page.
+    </p>
 
+    <label class="checkbox-row" style="margin-bottom:20px">
+      <input type="checkbox" id="daily-enabled">
+      <span>Enable popup on home page</span>
+    </label>
+
+    <label>Select Menu Item</label>
+    <select id="daily-item-select">
+      <option value="">— Choose an item —</option>
+    </select>
+
+    <div id="daily-preview" style="display:none; margin-bottom:16px">
+      <img id="daily-preview-img" src="" alt=""
+        style="width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+      <div style="font-weight:700;color:var(--text)" id="daily-preview-name"></div>
+      <div style="color:var(--brand);font-weight:700" id="daily-preview-price"></div>
+    </div>
+
+    <button class="btn btn-brand btn-full" onclick="saveDailyPick()">
+      SAVE DAILY PICK
+    </button>
+  </div>
+</div>
 <!-- ─── Toast ────────────────────────────────────────────────────────────── -->
 <div id="admin-toast" class="admin-toast"></div>
 

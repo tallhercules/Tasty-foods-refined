@@ -80,12 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ─── Panel Navigation ──────────────────────────────────────────────────────────
 
-const PANELS = ['overview', 'menu', 'home', 'translations'];
+const PANELS = ['overview', 'menu', 'home', 'translations', 'daily'];
 const TITLES = {
   overview:     'Overview',
   menu:         'Menu Items',
   home:         'Home Slots',
-  translations: 'Translations'
+  translations: 'Translations',
+  daily: 'Daily Pick',
 };
 
 function showPanel(name) {
@@ -103,6 +104,8 @@ function showPanel(name) {
   if (name === 'menu')         loadMenuPanel();
   if (name === 'home')         loadHomePanel();
   if (name === 'translations') loadTranslationsPanel();
+  if (name === 'translations') loadTranslationsPanel();
+  if (name === 'daily') loadDailyPanel();
 }
 
 // ─── Toast ─────────────────────────────────────────────────────────────────────
@@ -476,7 +479,136 @@ async function saveAllTranslations() {
     toast('Save failed: ' + err.message, true);
   }
 }
+// ─── DAILY PICK PANEL ────────────────────────────────────────
 
+async function loadDailyPanel() {
+  try {
+    const [pickData, menuItems] = await Promise.all([
+      api('GET', '/api/admin/daily-pick'),
+      api('GET', '/api/admin/menu')
+    ]);
+
+    // Fill the enabled checkbox
+    document.getElementById('daily-enabled').checked = !!pickData.enabled;
+
+    // Fill the dropdown with all available menu items
+    const select = document.getElementById('daily-item-select');
+    select.innerHTML = '<option value="">— Choose an item —</option>';
+    menuItems.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item.id;
+      opt.textContent = `${item.name_en} — ${Number(item.price).toLocaleString()}₮`;
+      if (pickData.item_id === item.id) opt.selected = true;
+      select.appendChild(opt);
+    });
+
+    // Show preview if item already selected
+    if (pickData.item) updateDailyPreview(pickData.item);
+
+    // Update preview when dropdown changes
+    select.onchange = () => {
+      const selected = menuItems.find(i => i.id === Number(select.value));
+      if (selected) updateDailyPreview(selected);
+      else hideDailyPreview();
+    };
+
+  } catch (err) {
+    toast('Could not load daily pick: ' + err.message, true);
+  }
+}
+
+function updateDailyPreview(item) {
+  document.getElementById('daily-preview').style.display = 'block';
+  document.getElementById('daily-preview-img').src = item.image || '';
+  document.getElementById('daily-preview-name').textContent = item.name_en;
+  document.getElementById('daily-preview-price').textContent =
+    Number(item.price).toLocaleString() + '₮';
+}
+
+function hideDailyPreview() {
+  document.getElementById('daily-preview').style.display = 'none';
+}
+
+async function saveDailyPick() {
+  const enabled = document.getElementById('daily-enabled').checked;
+  const item_id = Number(document.getElementById('daily-item-select').value) || null;
+
+  if (enabled && !item_id) {
+    toast('Please select a menu item first', true);
+    return;
+  }
+
+  try {
+    await api('PUT', '/api/admin/daily-pick', { enabled, item_id });
+    toast('Daily pick saved ✓');
+  } catch (err) {
+    toast(err.message, true);
+  }
+}
+
+
+// ─── DAILY PICK PANEL ────────────────────────────────────────
+
+async function loadDailyPanel() {
+  try {
+    const [pickData, menuItems] = await Promise.all([
+      api('GET', '/api/admin/daily-pick'),
+      api('GET', '/api/admin/menu')
+    ]);
+
+    document.getElementById('daily-enabled').checked = !!pickData.enabled;
+
+    const select = document.getElementById('daily-item-select');
+    select.innerHTML = '<option value="">— Choose an item —</option>';
+    menuItems.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item.id;
+      opt.textContent = `${item.name_en} — ${Number(item.price).toLocaleString()}₮`;
+      if (pickData.item_id === item.id) opt.selected = true;
+      select.appendChild(opt);
+    });
+
+    if (pickData.item) updateDailyPreview(pickData.item);
+
+    select.onchange = () => {
+      const selected = menuItems.find(i => i.id === Number(select.value));
+      if (selected) updateDailyPreview(selected);
+      else hideDailyPreview();
+    };
+
+  } catch (err) {
+    toast('Could not load daily pick: ' + err.message, true);
+  }
+}
+
+function updateDailyPreview(item) {
+  document.getElementById('daily-preview').style.display = 'block';
+  document.getElementById('daily-preview-img').src = item.image || '';
+  document.getElementById('daily-preview-name').textContent = item.name_en;
+  document.getElementById('daily-preview-price').textContent =
+    Number(item.price).toLocaleString() + '₮';
+}
+
+function hideDailyPreview() {
+  document.getElementById('daily-preview').style.display = 'none';
+}
+
+async function saveDailyPick() {
+  const enabled = document.getElementById('daily-enabled').checked;
+  const item_id = Number(document.getElementById('daily-item-select').value) || null;
+
+  if (enabled && !item_id) {
+    toast('Please select a menu item first', true);
+    return;
+  }
+
+  try {
+    await api('PUT', '/api/admin/daily-pick', { enabled, item_id });
+    toast('Daily pick saved ✓');
+  } catch (err) {
+    toast(err.message, true);
+  }
+}
 // ─── Utils ────────────────────────────────────────────────────────────────────
 
 function escHTML(str) {
