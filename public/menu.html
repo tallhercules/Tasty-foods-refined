@@ -77,26 +77,70 @@
 </head>
 <body>
 
+<!-- ─── NAVBAR ─────────────────────────────────────────────────────────────── -->
 <nav class="navbar">
   <div class="nav-content">
+
+    <!-- Hamburger — left -->
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Logo — center -->
     <a href="index.html" class="brand">
-      <img src="images/logo.png" alt="Tasty Foods">
+      <img src="images/logo.png" alt="Tasty Foods Logo">
       <span class="brand-name">TASTY FOODS</span>
     </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="index.html" data-key="nav_home">Home</a></li>
-      <li><a href="menu.html" data-key="nav_menu" class="active">Menu</a></li>
-      <li><a href="about.html" data-key="nav_about">About Us</a></li>
-      <li><a href="contact.html" data-key="nav_contact">Contact</a></li>
-      <li class="order-link"><a href="order.html" data-key="nav_order">Order <span class="nav-badge" id="nav-cart-badge" style="display:none">0</span></a></li>
-    </ul>
+<ul class="nav-links" id="nav-links">
+
+  <!-- Logo inside mobile menu -->
+  <li class="mobile-menu-logo" style="margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+    <div style="display:flex; align-items:center; gap:10px; padding:0 16px;">
+      <img src="images/logo.png" style="width:38px; height:38px; object-fit:contain;">
+      <span style="font-family:'Raleway',sans-serif; font-size:1.05rem; font-weight:900; color:var(--brand);">TASTY FOODS</span>
+    </div>
+  </li>
+
+  <li><a href="index.html" data-key="nav_home" class="active">Home</a></li>
+  <li><a href="menu.html" data-key="nav_menu">Menu</a></li>
+  <li><a href="about.html" data-key="nav_about">About Us</a></li>
+  <li><a href="contact.html" data-key="nav_contact">Contact</a></li>
+  <li class="order-link">
+    <a href="order.html" data-key="nav_order">
+      Order
+      <span class="nav-badge" id="nav-cart-badge" style="display:none">0</span>
+    </a>
+  </li>
+
+  <!-- Lang switch inside mobile menu -->
+  <li class="mobile-lang" style="margin-top:auto; padding-top:16px; border-top:1px solid var(--border);">
+    <div style="display:flex; align-items:center; gap:10px; padding:13px 16px;">
+      <img src="https://flagcdn.com/w20/mn.png" id="mobile-lang-flag" style="width:20px; height:14px; border-radius:2px;">
+      <div class="switch-track" id="mobile-lang-track" onclick="Lang.toggle(); document.getElementById('mobile-lang-flag').src = Lang.getLang()==='en' ? 'https://flagcdn.com/w20/gb.png' : 'https://flagcdn.com/w20/mn.png'">
+        <div class="switch-handle"></div>
+      </div>
+      <span id="mobile-lang-label" style="font-weight:700; font-size:0.85rem; color:var(--mid)">MN</span>
+    </div>
+  </li>
+
+</ul>
+
+    <!-- Lang switch — right -->
     <div class="lang-switch">
-      <img src="https://flagcdn.com/w20/mn.png" id="lang-flag" alt="flag">
-      <div class="switch-track" id="lang-track" onclick="Lang.toggle()"><div class="switch-handle"></div></div>
+      <img src="https://flagcdn.com/w20/mn.png" id="lang-flag" alt="Language flag">
+      <div class="switch-track" id="lang-track" onclick="Lang.toggle()">
+        <div class="switch-handle"></div>
+      </div>
       <span id="lang-label">MN</span>
     </div>
+
   </div>
 </nav>
+
+<!-- Mobile overlay — outside nav -->
+<div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
 
 <div class="menu-hero">
   <span class="section-tag" style="color:rgba(255,107,69,0.7)">Tasty Foods</span>

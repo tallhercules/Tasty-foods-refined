@@ -12,12 +12,25 @@
 <!-- ─── NAVBAR ─────────────────────────────────────────────────────────────── -->
 <nav class="navbar">
   <div class="nav-content">
+
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
     <a href="index.html" class="brand">
       <img src="images/logo.png" alt="Tasty Foods Logo">
       <span class="brand-name">TASTY FOODS</span>
     </a>
 
     <ul class="nav-links" id="nav-links">
+      <li class="mobile-menu-logo">
+        <div style="display:flex;align-items:center;gap:10px;padding:4px 16px 16px;">
+          <img src="images/logo.png" style="width:36px;height:36px;object-fit:contain;">
+          <span style="font-family:'Raleway',sans-serif;font-size:1rem;font-weight:900;color:var(--brand);">TASTY FOODS</span>
+        </div>
+      </li>
       <li><a href="index.html" data-key="nav_home" class="active">Home</a></li>
       <li><a href="menu.html" data-key="nav_menu">Menu</a></li>
       <li><a href="about.html" data-key="nav_about">About Us</a></li>
@@ -28,6 +41,15 @@
           <span class="nav-badge" id="nav-cart-badge" style="display:none">0</span>
         </a>
       </li>
+      <li class="mobile-lang" style="margin-top:auto; padding-top:16px; border-top:1px solid var(--border); position:absolute; bottom:24px; left:0; right:0;">
+        <div style="display:flex;align-items:center;gap:10px;padding:16px 16px 4px;">
+          <img src="https://flagcdn.com/w20/mn.png" id="mobile-lang-flag" style="width:20px;height:14px;border-radius:2px;">
+          <div class="switch-track" id="mobile-lang-track" onclick="Lang.toggle(); document.getElementById('mobile-lang-flag').src=Lang.getLang()==='en'?'https://flagcdn.com/w20/gb.png':'https://flagcdn.com/w20/mn.png'">
+            <div class="switch-handle"></div>
+          </div>
+          <span id="mobile-lang-label" style="font-weight:700;font-size:0.85rem;color:var(--mid)">MN</span>
+        </div>
+      </li>
     </ul>
 
     <div class="lang-switch">
@@ -37,9 +59,11 @@
       </div>
       <span id="lang-label">MN</span>
     </div>
+
   </div>
 </nav>
 
+<div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
 <!-- ─── HERO ───────────────────────────────────────────────────────────────── -->
 <section class="hero-hidden">
  <section class="hero">
@@ -131,7 +155,7 @@
 <!-- ─── DAILY PICK POPUP ──────────────────────────── -->
 <div id="daily-popup" class="daily-popup">
   <div class="daily-popup-card">
-    <button class="daily-popup-close" onclick="closePopup()">✕</button>
+    <button class="daily-popup-close" onclick="if(typeof closePopup==='function')closePopup()">✕</button>
     <div class="daily-popup-badge">👨‍🍳 Chef's Pick Today</div>
     <img id="popup-img" src="" alt="Daily Pick" class="daily-popup-img">
     <div class="daily-popup-info">

@@ -164,6 +164,7 @@ document.addEventListener('click', e => {
   if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto')) return;
 
   e.preventDefault();
+  closeMobileMenu();
   document.body.classList.add('fade-out');
 
   setTimeout(() => {
@@ -172,6 +173,12 @@ document.addEventListener('click', e => {
 });
 
 // ─── Scroll animations ────────────────────────────────────
+// Close mobile menu when a link is clicked
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+  });
+});
 document.addEventListener('DOMContentLoaded', () => {
   const scrollEls = document.querySelectorAll(
     '.gallery-section, .features-section, .feature-card, .filter-bar, .menu-grid-wrap'
@@ -190,4 +197,66 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
 
   scrollEls.forEach(el => observer.observe(el));
+});
+
+function toggleMobileMenu() {
+  const nav = document.getElementById('nav-links');
+  const burger = document.getElementById('hamburger');
+  const overlay = document.getElementById('mobile-overlay');
+
+  const isOpen = nav?.classList.contains('open');
+
+  if (isOpen) {
+    nav?.classList.remove('open');
+    burger?.classList.remove('open');
+    overlay?.classList.remove('active');
+    document.body.style.overflow = '';
+  } else {
+    nav?.classList.add('open');
+    burger?.classList.add('open');
+    overlay?.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeMobileMenu() {
+  const nav = document.getElementById('nav-links');
+  const burger = document.getElementById('hamburger');
+  const overlay = document.getElementById('mobile-overlay');
+
+  nav?.classList.remove('open');
+  burger?.classList.remove('open');
+  overlay?.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// ─── Mobile navbar scroll (liquid glass) ─────────────────
+let lastScroll = 0;
+
+window.addEventListener('scroll', () => {
+  if (window.innerWidth > 768) return;
+
+  const navbar = document.querySelector('.navbar');
+  const brand = document.querySelector('.brand');
+  const hamburger = document.getElementById('hamburger');
+  const current = window.scrollY;
+
+  if (current > 80) {
+    navbar.classList.add('glass');
+    brand?.classList.add('hidden');
+    hamburger?.classList.add('glowing');
+  } else {
+    navbar.classList.remove('glass');
+    brand?.classList.remove('hidden');
+    hamburger?.classList.remove('glowing');
+  }
+
+  lastScroll = current;
+});
+// Sync mobile lang switch track
+document.addEventListener('DOMContentLoaded', () => {
+  const mobileLangTrack = document.getElementById('mobile-lang-track');
+  if (mobileLangTrack) {
+    mobileLangTrack.classList.toggle('on', Lang.getLang() === 'en');
+  }
 });

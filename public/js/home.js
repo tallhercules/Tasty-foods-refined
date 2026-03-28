@@ -84,12 +84,9 @@ async function loadDailyPopup() {
 
     // Don't show if disabled or no item set
     if (!data.enabled || !data.item) return;
-
-    // Check if user already saw it today
     const lastSeen = localStorage.getItem('tf_popup_seen');
-    const today = new Date().toDateString();
-    if (lastSeen === today) return;
-
+const today = new Date().toDateString();
+if (lastSeen === today) return;
     // Fill in the popup content
     const lang = Lang?.getLang?.() || 'mn';
     const name = lang === 'mn' && data.item.name_mn 
@@ -99,7 +96,9 @@ async function loadDailyPopup() {
     document.getElementById('popup-name').textContent = name;
     document.getElementById('popup-price').textContent = 
       Number(data.item.price).toLocaleString() + '₮';
-    document.getElementById('popup-img').src = data.item.image || '';
+    const imgEl = document.getElementById('popup-img');
+imgEl.src = '';
+imgEl.src = data.item.image.startsWith('/') ? data.item.image : '/' + data.item.image;
 
     // Wire up the add button
     const addBtn = document.getElementById('popup-add-btn');
@@ -108,11 +107,19 @@ async function loadDailyPopup() {
       closePopup();
     };
 
-    // Show after a small delay so page loads first
-    setTimeout(() => {
+    const trigger = document.querySelector('.gallery-section');
+if (!trigger) return;
+
+const popupObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
       document.getElementById('daily-popup').classList.add('active');
-      document.getElementById('daily-overlay').classList.add('active');
-    }, 1500);
+      popupObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+
+popupObserver.observe(trigger);
 
   } catch (err) {
     console.warn('[Popup] Could not load daily pick:', err.message);
@@ -120,10 +127,13 @@ async function loadDailyPopup() {
 }
 
 function closePopup() {
-  document.getElementById('daily-popup').classList.remove('active');
-  document.getElementById('daily-overlay').classList.remove('active');
-  // Save today's date so it won't show again until tomorrow
-  localStorage.setItem('tf_popup_seen', new Date().toDateString());
+  const popup = document.getElementById('daily-popup');
+  popup.classList.add('closing');
+  setTimeout(() => {
+    popup.classList.remove('active', 'closing');
+    localStorage.setItem('tf_popup_seen', new Date().toDateString());
+  }, 400);
+  
 }
 
 document.addEventListener('DOMContentLoaded', loadDailyPopup);
